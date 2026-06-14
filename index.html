@@ -48,10 +48,27 @@
 
     /* ── Navigation ── */
     nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
       width: 100%;
-      padding: 1.5rem 2rem;
+      padding: 1.2rem 2rem;
       display: flex;
       justify-content: center;
+      background: transparent;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom: 1px solid transparent;
+      z-index: 100;
+      transition: background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+    }
+
+    nav.scrolled {
+      background: rgba(245, 245, 245, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
 
     nav ul {
@@ -84,7 +101,7 @@
       grid-template-columns: 1fr 1fr;
       align-items: center;
       gap: 4rem;
-      padding: 2rem 6% 5rem;
+      padding: 5rem 6% 5rem;
       position: relative;
     }
 
@@ -372,7 +389,7 @@
         display: flex;
         overflow: hidden;
         user-select: none;
-        gap: 4rem;
+        gap: 0;
     }
 
     .marquee-content {
@@ -1976,6 +1993,78 @@
         border: 1px solid rgba(255,255,255,0.12);
     }
 
+    /* ── Hamburger ── */
+    .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }
+
+    .nav-hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #333;
+        border-radius: 2px;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Recommendations nav highlight */
+    nav a[href="#recommendations"] {
+        color: #3B82F6;
+        font-weight: 500;
+    }
+
+    nav a[href="#recommendations"]:hover { color: #2563EB; }
+
+    @media (max-width: 640px) {
+        nav {
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 1rem 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        nav.open {
+            background: rgba(245, 245, 245, 0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .nav-hamburger { display: flex; }
+
+        nav ul {
+            display: none;
+            flex-direction: column;
+            gap: 0;
+            width: 100%;
+            padding: 0.5rem 0 0.25rem;
+        }
+
+        nav ul.open { display: flex; }
+
+        nav ul li a {
+            display: block;
+            padding: 0.7rem 0;
+            font-size: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        nav ul li:last-child a { border-bottom: none; }
+    }
+
     </style>
 </head>
 <body>
@@ -2046,8 +2135,11 @@
     <div class="bg-pattern"></div>
 
 <nav>
-    <ul>
-      <li><a href="#about-me" class="active">About Me</a></li>
+    <button class="nav-hamburger" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+    </button>
+    <ul id="navMenu">
+      <li><a href="#about-me">About Me</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#recommendations">Recommendations</a></li>
       <li><a href="#projects">Projects</a></li>
@@ -2233,18 +2325,6 @@
                         </div>
                         <span class="marquee-name">Kubernetes</span>
                     </div>
-                    <div class="marquee-item">
-                        <div class="marquee-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mlflow/mlflow-original.svg" alt="MLflow">
-                        </div>
-                        <span class="marquee-name">MLflow</span>
-                    </div>
-                    <div class="marquee-item">
-                        <div class="marquee-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/databricks/databricks-original.svg" alt="Databricks">
-                        </div>
-                        <span class="marquee-name">Databricks</span>
-                    </div>
                 </div>
                 <!-- Duplicate for seamless loop -->
                 <div class="marquee-content" aria-hidden="true">
@@ -2307,18 +2387,6 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain.svg" alt="Kubernetes">
                         </div>
                         <span class="marquee-name">Kubernetes</span>
-                    </div>
-                    <div class="marquee-item">
-                        <div class="marquee-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mlflow/mlflow-original.svg" alt="MLflow">
-                        </div>
-                        <span class="marquee-name">MLflow</span>
-                    </div>
-                    <div class="marquee-item">
-                        <div class="marquee-icon">
-                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/databricks/databricks-original.svg" alt="Databricks">
-                        </div>
-                        <span class="marquee-name">Databricks</span>
                     </div>
                 </div>
             </div>
@@ -2845,6 +2913,7 @@
             <div class="footer-links">
                 <a href="#about-me">About</a>
                 <a href="#experience">Experience</a>
+                <a href="#recommendations">Recommendations</a>
                 <a href="#projects">Projects</a>
                 <a href="#skills">Skills</a>
                 <a href="#contact">Contact</a>
@@ -2854,6 +2923,56 @@
     </footer>
 
     <script>
+        // ── Nav scroll behaviour ──
+        (function() {
+            const nav = document.querySelector('nav');
+            const toggle = document.getElementById('navToggle');
+            const menu = document.getElementById('navMenu');
+
+            // Scroll spy — update active nav link
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('nav a[href^="#"]');
+
+            function updateActiveNav() {
+                let current = '';
+                sections.forEach(function(section) {
+                    const sectionTop = section.offsetTop - 120;
+                    if (window.scrollY >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(function(link) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', updateActiveNav, { passive: true });
+            updateActiveNav();
+
+            // Scroll transparency + spy
+            window.addEventListener('scroll', function() {
+                nav.classList.toggle('scrolled', window.scrollY > 80);
+                updateActiveNav();
+            }, { passive: true });
+            toggle.addEventListener('click', function() {
+                toggle.classList.toggle('open');
+                menu.classList.toggle('open');
+                nav.classList.toggle('open');
+            });
+
+            // Close menu on link click
+            menu.querySelectorAll('a').forEach(function(link) {
+                link.addEventListener('click', function() {
+                    toggle.classList.remove('open');
+                    menu.classList.remove('open');
+                    nav.classList.remove('open');
+                });
+            });
+        })();
+
         // ── Splash screen + Neural network background ──
         (function() {
             const splash = document.getElementById('splash');
